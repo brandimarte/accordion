@@ -1,6 +1,6 @@
 // --- Musical data: Stradella layout ---
 const tones = [
-  "A", "E", "B", "F#", "C#", "G#", "D#", "A#", "F", "C", "G", "D", "A", "E", "B", "F#", "C#", "G#", "D#", "A#"
+  "Bbb (A)", "Fb", "Cb", "Gb", "Db", "Ab", "Eb", "Bb", "F", "C", "G", "D", "A", "E", "B", "F#", "C#", "G#", "D#", "A#"
 ];
 const toneCount = 20;
 
@@ -19,15 +19,19 @@ const radius = 12;
 const spacingX = 45;
 const spacingY = 28;
 const offsetY = 14;
-svg.setAttribute("width", spacingX * columns.length + 40);
-svg.setAttribute("height", spacingY * toneCount + 40);
+svg.setAttribute("width", spacingX * columns.length + 60);
+svg.setAttribute("height", spacingY * toneCount + 60);
 
 const buttons = [];
 
 columns.forEach((col, ci) => {
   tones.forEach((tone, ri) => {
-    const cx = 30 + ci * spacingX;
+    const cx = 40 + ci * spacingX;
     const cy = 30 + ri * spacingY + col.offset * offsetY;
+
+    // Group for circle + label
+    const group = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    svg.appendChild(group);
 
     const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
     circle.setAttribute("cx", cx);
@@ -36,7 +40,16 @@ columns.forEach((col, ci) => {
     circle.classList.add("button");
     circle.dataset.tone = tone;
     circle.dataset.col = col.type;
-    svg.appendChild(circle);
+    group.appendChild(circle);
+
+    // 🎵 Add text label
+    const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    label.setAttribute("x", cx);
+    label.setAttribute("y", cy + 0.5); // slightly adjust vertical centering
+    label.classList.add("label");
+    label.textContent = tone;
+    group.appendChild(label);
+
     buttons.push(circle);
   });
 });
