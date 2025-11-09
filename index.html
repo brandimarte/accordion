@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Accordion Chord Visualizer</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>Accordion Chord Visualizer (120-bass Stradella)</h1>
+  </header>
+
+  <section id="controls">
+    <label for="tone">Tone:</label>
+    <select id="tone"></select>
+
+    <label for="chord">Chord type:</label>
+    <select id="chord">
+      <option value="major">Major</option>
+      <option value="minor">Minor</option>
+      <option value="7">7th</option>
+      <option value="maj7">Maj7</option>
+      <option value="m6">m6</option>
+      <option value="7b5">7(b5)</option>
+    </select>
+  </section>
+
+  <section id="diagram">
+    <svg id="accordion-svg"></svg>
+  </section>
+
+  <footer>
+    <p>© 2025 Accordion Chord Visualizer — by <a href="https://brandimarte.github.io">Pedro Brandimarte</a></p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

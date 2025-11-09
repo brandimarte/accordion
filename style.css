@@ -1,0 +1,55 @@
+body {
+  font-family: system-ui, sans-serif;
+  text-align: center;
+  margin: 0;
+  background: #fafafa;
+  color: #222;
+}
+
+header {
+  background: #333;
+  color: white;
+  padding: 0.75em;
+}
+
+#controls {
+  margin: 1.5em;
+}
+
+#diagram {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2em;
+}
+
+svg {
+  background: #f5f5f5;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.button {
+  fill: #ccc;
+  stroke: #666;
+  stroke-width: 1px;
+  cursor: pointer;
+  transition: fill 0.2s;
+}
+
+.button:hover {
+  fill: #aaa;
+}
+
+.button.active {
+  fill: #e74c3c;
+}
+
+label, select {
+  margin: 0.3em;
+  font-size: 1em;
+}
+
+footer {
+  font-size: 0.8em;
+  margin-bottom: 1em;
+}
