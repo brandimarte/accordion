@@ -1,6 +1,6 @@
 // --- Musical data: Stradella layout ---
 const tones = [
-  "Bbb (A)", "Fb", "Cb", "Gb", "Db", "Ab", "Eb", "Bb", "F", "C", "G", "D", "A", "E", "B", "F#", "C#", "G#", "D#", "A#"
+  "Bbb", "Fb", "Cb", "Gb", "Db", "Ab", "Eb", "Bb", "F", "C", "G", "D", "A", "E", "B", "F#", "C#", "G#", "D#", "A#"
 ];
 const toneCount = 20;
 
@@ -45,8 +45,9 @@ columns.forEach((col, ci) => {
     // 🎵 Add text label
     const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
     label.setAttribute("x", cx);
-    label.setAttribute("y", cy + 0.5); // slightly adjust vertical centering
-    label.classList.add("label");
+    label.setAttribute("y", cy + 0.6); // slightly adjust vertical centering
+    // label.classList.add("label");
+    label.setAttribute("class", "label");
     label.textContent = tone;
     group.appendChild(label);
 

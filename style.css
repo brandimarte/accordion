@@ -46,12 +46,20 @@ svg {
 
 /* 🎵 Label text inside each button */
 .label {
-  font-size: 9px;
+  font-size: 8px;
   text-anchor: middle;
   dominant-baseline: central;
-  fill: #222;
+  fill: #111;
   user-select: none;
-  pointer-events: none; /* make sure text doesn’t block clicking */
+  pointer-events: none;
+  font-weight: 500;
+}
+
+/* Optional: make long text smaller to fit better */
+@media (max-width: 600px) {
+  .label {
+    font-size: 6px;
+  }
 }
 
 label, select {
