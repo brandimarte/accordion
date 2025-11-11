@@ -85,8 +85,8 @@ const buttons = [];
 
 rowTypes.forEach((row, rowIndex) => {
   bassNotes.forEach((note, colIndex) => {
-    // The Bass row (rowIndex 1) is the reference, all others are staggered
-    const cx = 40 + colIndex * spacingX + (rowIndex === 1 ? 0 : offsetX);
+    // Use a cumulative offset relative to the Bass row (rowIndex 1)
+    const cx = 40 + colIndex * spacingX + (rowIndex - 1) * offsetX;
     const cy = 30 + rowIndex * spacingY;
 
     const group = document.createElementNS("http://www.w3.org/2000/svg", "g");
