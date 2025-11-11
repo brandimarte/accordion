@@ -85,3 +85,9 @@ a {
 a:hover {
   text-decoration: underline;
 }
+
+/* Style for the chord note labels */
+.chord-label {
+  font-size: 6px;
+  font-weight: normal;
+}

@@ -28,17 +28,55 @@ const noteToIndex = {
   "B": 11, "Cb": 11
 };
 
-// A mapping from index to a preferred note spelling for display (e.g., for counter-bass labels)
+// A mapping from index to a preferred note spelling for display
 const indexToNote = [
   "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"
 ];
+
+// --- Chord note calculation ---
+function getChordNotes(rootNote, chordType) {
+  const rootIndex = noteToIndex[rootNote];
+  if (rootIndex === undefined) return "?";
+
+  const notes = [];
+  let third, fifth, seventh;
+
+  switch (chordType) {
+    case "major":
+      third = indexToNote[(rootIndex + 4) % 12];
+      fifth = indexToNote[(rootIndex + 7) % 12];
+      notes.push(indexToNote[rootIndex], third, fifth);
+      break;
+    case "minor":
+      third = indexToNote[(rootIndex + 3) % 12];
+      fifth = indexToNote[(rootIndex + 7) % 12];
+      notes.push(indexToNote[rootIndex], third, fifth);
+      break;
+    case "seventh": // Dominant 7th
+      third = indexToNote[(rootIndex + 4) % 12];
+      fifth = indexToNote[(rootIndex + 7) % 12];
+      seventh = indexToNote[(rootIndex + 10) % 12];
+      notes.push(indexToNote[rootIndex], third, fifth, seventh);
+      break;
+    case "diminished": // Diminished 7th
+      third = indexToNote[(rootIndex + 3) % 12];
+      fifth = indexToNote[(rootIndex + 6) % 12];
+      seventh = indexToNote[(rootIndex + 9) % 12];
+      notes.push(indexToNote[rootIndex], third, fifth, seventh);
+      break;
+    default:
+      return "";
+  }
+  return notes.join("-");
+}
+
 
 // --- Draw SVG grid ---
 const svg = document.getElementById("accordion-svg");
 const radius = 12;
 const spacingX = 30;
 const spacingY = 25;
-const offsetX = 15; // Stagger alternate rows
+const offsetX = 15; // Stagger amount
 
 svg.setAttribute("width", spacingX * bassNotes.length + 60);
 svg.setAttribute("height", spacingY * rowTypes.length + 40);
@@ -47,7 +85,8 @@ const buttons = [];
 
 rowTypes.forEach((row, rowIndex) => {
   bassNotes.forEach((note, colIndex) => {
-    const cx = 40 + colIndex * spacingX + (rowIndex % 2 === 0 ? 0 : offsetX);
+    // The Bass row (rowIndex 1) is the reference, all others are staggered
+    const cx = 40 + colIndex * spacingX + (rowIndex === 1 ? 0 : offsetX);
     const cy = 30 + rowIndex * spacingY;
 
     const group = document.createElementNS("http://www.w3.org/2000/svg", "g");
@@ -62,26 +101,27 @@ rowTypes.forEach((row, rowIndex) => {
     circle.dataset.rowType = row.type;
     group.appendChild(circle);
 
-    // Add text label (only for bass and counter-bass rows)
+    // Add text label
+    const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    label.setAttribute("x", cx);
+    label.setAttribute("y", cy + 1); // Adjust vertical centering
+    label.classList.add("label");
+
     if (row.type === "bass" || row.type === "counterbass") {
-      const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
-      label.setAttribute("x", cx);
-      label.setAttribute("y", cy + 1); // Adjust vertical centering
-      label.classList.add("label");
-      
-      let buttonNoteForLabel = note; // This is the bass note from bassNotes array
+      let buttonNoteForLabel = note;
       if (row.type === 'counterbass') {
         const bassNoteIndex = noteToIndex[note];
         if (bassNoteIndex !== undefined) {
           const counterBassIndex = (bassNoteIndex + 4) % 12; // Major third up
           buttonNoteForLabel = indexToNote[counterBassIndex];
-        } else {
-          console.warn(`Could not find index for bass note: ${note}`);
         }
       }
       label.textContent = buttonNoteForLabel.replace(/##/g, "x").replace(/bb/g, "d");
-      group.appendChild(label);
+    } else {
+      label.classList.add("chord-label");
+      label.textContent = getChordNotes(note, row.type);
     }
+    group.appendChild(label);
     
     buttons.push(circle);
   });
@@ -89,7 +129,7 @@ rowTypes.forEach((row, rowIndex) => {
 
 // --- Populate dropdowns ---
 const toneSelect = document.getElementById("tone");
-indexToNote.forEach(tone => { // Use indexToNote for dropdown options
+indexToNote.forEach(tone => {
   const opt = document.createElement("option");
   opt.value = tone;
   opt.textContent = tone;
@@ -105,10 +145,7 @@ function highlightChord() {
 
   function activate(targetNote, rowType) {
     const targetNoteIndex = noteToIndex[targetNote];
-    if (targetNoteIndex === undefined) {
-      console.warn(`Unknown target note for activation: ${targetNote}`);
-      return;
-    }
+    if (targetNoteIndex === undefined) return;
 
     buttons
       .filter(b => {
@@ -141,7 +178,6 @@ function highlightChord() {
     activate(rootNote, "minor");
     activate(majorThirdNote, "counterbass");
   } else if (chordType === "7b5") {
-    // For 7b5, activate the root bass and the root's 7th chord button
     activate(rootNote, "bass");
     activate(rootNote, "seventh");
   }
