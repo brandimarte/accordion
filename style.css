@@ -20,46 +20,49 @@ header {
   display: flex;
   justify-content: center;
   margin-bottom: 2em;
+  overflow-x: auto; /* Allow horizontal scrolling on small screens */
 }
 
 svg {
-  background: #f5f5f5;
+  background: #f0f0f0;
   border: 1px solid #ccc;
   border-radius: 8px;
 }
 
 .button {
-  fill: #ccc;
-  stroke: #666;
+  fill: #e0e0e0;
+  stroke: #888;
   stroke-width: 1px;
   cursor: pointer;
   transition: fill 0.2s;
 }
 
 .button:hover {
-  fill: #aaa;
+  fill: #c5c5c5;
 }
 
 .button.active {
   fill: #e74c3c;
+  stroke: #c0392b;
 }
 
-/* 🎵 Label text inside each button */
+/* Style for the indented counter-bass buttons */
+.button[data-row-type="counterbass"] {
+  fill: #d5d5d5;
+}
+.button[data-row-type="counterbass"].active {
+  fill: #e74c3c;
+}
+
+/* Label text inside each button */
 .label {
-  font-size: 8px;
+  font-size: 9px;
+  font-weight: bold;
   text-anchor: middle;
   dominant-baseline: central;
   fill: #111;
   user-select: none;
   pointer-events: none;
-  font-weight: 500;
-}
-
-/* Optional: make long text smaller to fit better */
-@media (max-width: 600px) {
-  .label {
-    font-size: 6px;
-  }
 }
 
 label, select {
@@ -69,5 +72,16 @@ label, select {
 
 footer {
   font-size: 0.8em;
+  margin-top: 2em;
   margin-bottom: 1em;
+  color: #555;
+}
+
+a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
 }
