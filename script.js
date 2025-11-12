@@ -105,7 +105,7 @@ rowTypes.forEach((row, rowIndex) => {
     const group = document.createElementNS("http://www.w3.org/2000/svg", "g");
     svg.appendChild(group);
 
-    const circle = document.createElementNS("http://www.w3.000/svg", "circle");
+    const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
     circle.setAttribute("cx", cx);
     circle.setAttribute("cy", cy);
     circle.setAttribute("r", radius);
