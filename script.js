@@ -184,18 +184,9 @@ indexToNote.forEach(tone => {
 // --- Highlight logic ---
 
 function activate(targetNote, rowType, className = "active") {
-  const targetNoteIndex = noteToIndex[targetNote];
-  if (targetNoteIndex === undefined) return;
-
   buttons
-    .filter(b => {
-      const buttonNote = b.dataset.note;
-      const buttonNoteIndex = noteToIndex[buttonNote];
-      return buttonNoteIndex === targetNoteIndex && b.dataset.rowType === rowType;
-    })
+    .filter(b => b.dataset.note === targetNote && b.dataset.rowType === rowType)
     .forEach(b => {
-      b.classList.remove("active");
-      b.classList.remove("alternative");
       b.classList.add(className);
     });
 }
