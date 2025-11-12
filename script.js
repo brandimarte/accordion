@@ -33,39 +33,49 @@ const indexToNote = [
   "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"
 ];
 
+const sharpNoteMap = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+const flatNoteMap = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"];
+
+
 // --- Chord note calculation ---
 function getChordNotes(rootNote, chordType) {
   const rootIndex = noteToIndex[rootNote];
   if (rootIndex === undefined) return [];
 
+  const isFlatKey = rootNote.includes('b') || rootNote === 'F';
+  const primaryMap = isFlatKey ? flatNoteMap : sharpNoteMap;
+
   const notes = [];
   let third, fifth, seventh;
 
+  // The root note spelling should be preserved from the bassNotes array
+  notes.push(rootNote);
+
   switch (chordType) {
-    case "major": // Root, Major 3rd, Perfect 5th
-      third = indexToNote[(rootIndex + 4) % 12];
-      fifth = indexToNote[(rootIndex + 7) % 12];
-      notes.push(indexToNote[rootIndex], third, fifth);
+    case "major": // R, M3, P5
+      third = primaryMap[(rootIndex + 4) % 12];
+      fifth = primaryMap[(rootIndex + 7) % 12];
+      notes.push(third, fifth);
       break;
-    case "minor": // Root, Minor 3rd, Perfect 5th
-      third = indexToNote[(rootIndex + 3) % 12];
-      fifth = indexToNote[(rootIndex + 7) % 12];
-      notes.push(indexToNote[rootIndex], third, fifth);
+    case "minor": // R, m3, P5
+      third = flatNoteMap[(rootIndex + 3) % 12]; // Minor third is typically a flat
+      fifth = primaryMap[(rootIndex + 7) % 12];
+      notes.push(third, fifth);
       break;
-    case "seventh": // Dominant 7th (Root, 3, 7 - omits 5th)
-      third = indexToNote[(rootIndex + 4) % 12];
-      seventh = indexToNote[(rootIndex + 10) % 12];
-      notes.push(indexToNote[rootIndex], third, seventh);
+    case "seventh": // R, M3, m7
+      third = primaryMap[(rootIndex + 4) % 12];
+      seventh = flatNoteMap[(rootIndex + 10) % 12]; // Dominant seventh is a flat
+      notes.push(third, seventh);
       break;
-    case "diminished": // Root, m3, d7
-      third = indexToNote[(rootIndex + 3) % 12];
-      seventh = indexToNote[(rootIndex + 9) % 12];
-      notes.push(indexToNote[rootIndex], third, seventh);
+    case "diminished": // As per user: Root, m3, d7
+      third = flatNoteMap[(rootIndex + 3) % 12]; // Minor third is a flat
+      seventh = flatNoteMap[(rootIndex + 9) % 12]; // Diminished seventh is a flat
+      notes.push(third, seventh);
       break;
     default:
       return [];
   }
-  return notes; // Return an array of notes
+  return notes;
 }
 
 
