@@ -57,9 +57,9 @@ function getChordNotes(rootNote, chordType) {
       seventh = indexToNote[(rootIndex + 10) % 12];
       notes.push(indexToNote[rootIndex], third, seventh);
       break;
-    case "diminished": // As per user: Root, m3, d7
+    case "diminished": // Root, m3, d7
       third = indexToNote[(rootIndex + 3) % 12];
-      seventh = indexToNote[(rootIndex + 9) % 12]; // Diminished 7th
+      seventh = indexToNote[(rootIndex + 9) % 12];
       notes.push(indexToNote[rootIndex], third, seventh);
       break;
     default:
@@ -71,26 +71,26 @@ function getChordNotes(rootNote, chordType) {
 
 // --- Draw SVG grid ---
 const svg = document.getElementById("accordion-svg");
-const radius = 24; // Doubled from 12
-const spacingX = 60; // Doubled from 30
-const spacingY = 50; // Doubled from 25
-const offsetX = 30; // Doubled from 15
+const radius = 24;
+const spacingX = 60;
+const spacingY = 50;
+const offsetX = 30;
 
 // Calculate the required width based on the maximum x-coordinate of any button
 const maxColIndex = bassNotes.length - 1;
 const maxRowOffset = (rowTypes.length - 2) * offsetX;
-const calculatedWidth = 75 + maxColIndex * spacingX + maxRowOffset + radius + 20; // Increased initial padding from 40 to 65
+const calculatedWidth = 70 + maxColIndex * spacingX + maxRowOffset + radius + 20;
 
 svg.setAttribute("width", calculatedWidth);
-svg.setAttribute("height", spacingY * rowTypes.length + 40); // Diminished vertical padding by 15px
+svg.setAttribute("height", spacingY * rowTypes.length + 40);
 
 const buttons = [];
 
 rowTypes.forEach((row, rowIndex) => {
   bassNotes.forEach((note, colIndex) => {
     // Use a cumulative offset relative to the Bass row (rowIndex 1)
-    const cx = 75 + colIndex * spacingX + (rowIndex - 1) * offsetX; // Increased initial padding
-    const cy = 45 + rowIndex * spacingY; // Increased initial padding
+    const cx = 70 + colIndex * spacingX + (rowIndex - 1) * offsetX;
+    const cy = 45 + rowIndex * spacingY;
 
     const group = document.createElementNS("http://www.w3.org/2000/svg", "g");
     svg.appendChild(group);
