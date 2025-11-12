@@ -105,7 +105,7 @@ rowTypes.forEach((row, rowIndex) => {
     const group = document.createElementNS("http://www.w3.org/2000/svg", "g");
     svg.appendChild(group);
 
-    const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    const circle = document.createElementNS("http://www.w3.000/svg", "circle");
     circle.setAttribute("cx", cx);
     circle.setAttribute("cy", cy);
     circle.setAttribute("r", radius);
@@ -120,12 +120,18 @@ rowTypes.forEach((row, rowIndex) => {
       label.setAttribute("x", cx);
       label.setAttribute("y", cy + 1);
       label.classList.add("label");
-      let buttonNoteForLabel = note;
+      let buttonNoteForLabel = note; // This is the fundamental bass note from bassNotes array
+
       if (row.type === 'counterbass') {
-        const bassNoteIndex = noteToIndex[note];
+        const bassNoteIndex = noteToIndex[note]; // Index of the fundamental bass
         if (bassNoteIndex !== undefined) {
-          const counterBassIndex = (bassNoteIndex + 4) % 12;
-          buttonNoteForLabel = indexToNote[counterBassIndex];
+          const counterBassIndex = (bassNoteIndex + 4) % 12; // Index of the major third above
+
+          // Determine if the fundamental bass is a flat key or sharp key
+          const isFlatKey = note.includes('b') || note === 'F';
+          const primaryMap = isFlatKey ? flatNoteMap : sharpNoteMap;
+
+          buttonNoteForLabel = primaryMap[counterBassIndex];
         }
       }
       label.textContent = buttonNoteForLabel.replace(/##/g, "x").replace(/bb/g, "d");
