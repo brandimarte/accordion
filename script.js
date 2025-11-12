@@ -79,18 +79,18 @@ const offsetX = 30; // Doubled from 15
 // Calculate the required width based on the maximum x-coordinate of any button
 const maxColIndex = bassNotes.length - 1;
 const maxRowOffset = (rowTypes.length - 2) * offsetX;
-const calculatedWidth = 40 + maxColIndex * spacingX + maxRowOffset + radius + 20;
+const calculatedWidth = 65 + maxColIndex * spacingX + maxRowOffset + radius + 20; // Increased initial padding from 40 to 65
 
 svg.setAttribute("width", calculatedWidth);
-svg.setAttribute("height", spacingY * rowTypes.length + 40);
+svg.setAttribute("height", spacingY * rowTypes.length + 55); // Increased vertical padding from 40 to 55
 
 const buttons = [];
 
 rowTypes.forEach((row, rowIndex) => {
   bassNotes.forEach((note, colIndex) => {
     // Use a cumulative offset relative to the Bass row (rowIndex 1)
-    const cx = 40 + colIndex * spacingX + (rowIndex - 1) * offsetX;
-    const cy = 30 + rowIndex * spacingY;
+    const cx = 65 + colIndex * spacingX + (rowIndex - 1) * offsetX; // Increased initial padding
+    const cy = 45 + rowIndex * spacingY; // Increased initial padding
 
     const group = document.createElementNS("http://www.w3.org/2000/svg", "g");
     svg.appendChild(group);
