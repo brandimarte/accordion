@@ -28,6 +28,21 @@ const noteToIndex = {
   "B": 11, "Cb": 11
 };
 
+// Create a reverse map from index to all enharmonic note names
+const indexToAllNotes = {};
+for (const note in noteToIndex) {
+  const index = noteToIndex[note];
+  if (!indexToAllNotes[index]) {
+    indexToAllNotes[index] = [];
+  }
+  // Add to front if it's a sharp, to the back if it's a flat, for consistent ordering
+  if (note.includes('#')) {
+    indexToAllNotes[index].unshift(note);
+  } else {
+    indexToAllNotes[index].push(note);
+  }
+}
+
 // A mapping from index to a preferred note spelling for display
 const indexToNote = [
   "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"
@@ -167,50 +182,77 @@ indexToNote.forEach(tone => {
 });
 
 // --- Highlight logic ---
-function highlightChord() {
-  const rootNote = toneSelect.value;
-  const chordType = document.getElementById("chord").value;
 
-  buttons.forEach(b => b.classList.remove("active"));
+function activate(targetNote, rowType, className = "active") {
+  const targetNoteIndex = noteToIndex[targetNote];
+  if (targetNoteIndex === undefined) return;
 
-  function activate(targetNote, rowType) {
-    const targetNoteIndex = noteToIndex[targetNote];
-    if (targetNoteIndex === undefined) return;
+  buttons
+    .filter(b => {
+      const buttonNote = b.dataset.note;
+      const buttonNoteIndex = noteToIndex[buttonNote];
+      return buttonNoteIndex === targetNoteIndex && b.dataset.rowType === rowType;
+    })
+    .forEach(b => b.classList.add(className));
+}
 
-    buttons
-      .filter(b => {
-        const buttonNote = b.dataset.note;
-        const buttonNoteIndex = noteToIndex[buttonNote];
-        return buttonNoteIndex === targetNoteIndex && b.dataset.rowType === rowType;
-      })
-      .forEach(b => b.classList.add("active"));
-  }
-  
+function highlightSingleChord(rootNote, chordType, className) {
   const rootNoteIndex = noteToIndex[rootNote];
+  if (rootNoteIndex === undefined) return;
+
+  const isFlatKey = rootNote.includes('b') || rootNote === 'F';
+  const primaryMap = isFlatKey ? flatNoteMap : sharpNoteMap;
 
   if (chordType === "major") {
-    activate(rootNote, "bass");
-    activate(rootNote, "major");
+    activate(rootNote, "bass", className);
+    activate(rootNote, "major", className);
   } else if (chordType === "minor") {
-    activate(rootNote, "bass");
-    activate(rootNote, "minor");
+    activate(rootNote, "bass", className);
+    activate(rootNote, "minor", className);
   } else if (chordType === "7") {
-    activate(rootNote, "bass");
-    activate(rootNote, "seventh");
+    activate(rootNote, "bass", className);
+    activate(rootNote, "seventh", className);
   } else if (chordType === "maj7") {
     const majorThirdIndex = (rootNoteIndex + 4) % 12;
-    const majorThirdNote = indexToNote[majorThirdIndex];
-    activate(rootNote, "major");
-    activate(majorThirdNote, "counterbass");
+    const majorThirdNote = primaryMap[majorThirdIndex];
+    activate(rootNote, "major", className);
+    activate(majorThirdNote, "counterbass", className);
   } else if (chordType === "m6") {
     const majorThirdIndex = (rootNoteIndex + 4) % 12;
-    const majorThirdNote = indexToNote[majorThirdIndex];
-    activate(rootNote, "minor");
-    activate(majorThirdNote, "counterbass");
+    const majorThirdNote = primaryMap[majorThirdIndex];
+    activate(rootNote, "minor", className);
+    activate(majorThirdNote, "counterbass", className);
   } else if (chordType === "7b5") {
-    activate(rootNote, "bass");
-    activate(rootNote, "seventh");
+    activate(rootNote, "bass", className);
+    activate(rootNote, "seventh", className);
   }
+}
+
+function highlightChord() {
+  const selectedRoot = toneSelect.value;
+  const chordType = document.getElementById("chord").value;
+
+  buttons.forEach(b => {
+    b.classList.remove("active");
+    b.classList.remove("alternative");
+  });
+
+  const rootNoteIndex = noteToIndex[selectedRoot];
+  const allEnharmonicRoots = indexToAllNotes[rootNoteIndex] || [selectedRoot];
+
+  const primaryRoot = selectedRoot;
+  const alternativeRoots = allEnharmonicRoots.filter(r => r !== primaryRoot);
+
+  // Highlight primary chord
+  highlightSingleChord(primaryRoot, chordType, "active");
+
+  // Highlight alternative chords
+  alternativeRoots.forEach(altRoot => {
+    // Only highlight if the alternative bass note actually exists on the board
+    if (bassNotes.includes(altRoot)) {
+      highlightSingleChord(altRoot, chordType, "alternative");
+    }
+  });
 }
 
 toneSelect.addEventListener("change", highlightChord);

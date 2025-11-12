@@ -86,6 +86,12 @@ a:hover {
   text-decoration: underline;
 }
 
+/* Style for the alternative chord buttons */
+.button.alternative {
+  fill: #89CFF0; /* Baby Blue */
+  stroke: #71a2b3;
+}
+
 /* Style for the chord note labels */
 .chord-label {
   font-size: 12px;
