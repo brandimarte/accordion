@@ -193,7 +193,11 @@ function activate(targetNote, rowType, className = "active") {
       const buttonNoteIndex = noteToIndex[buttonNote];
       return buttonNoteIndex === targetNoteIndex && b.dataset.rowType === rowType;
     })
-    .forEach(b => b.classList.add(className));
+    .forEach(b => {
+      b.classList.remove("active");
+      b.classList.remove("alternative");
+      b.classList.add(className);
+    });
 }
 
 function highlightSingleChord(rootNote, chordType, className) {
