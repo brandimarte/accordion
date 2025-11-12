@@ -56,7 +56,7 @@ svg {
 
 /* Label text inside each button */
 .label {
-  font-size: 9px;
+  font-size: 18px;
   font-weight: bold;
   text-anchor: middle;
   dominant-baseline: central;
@@ -88,6 +88,6 @@ a:hover {
 
 /* Style for the chord note labels */
 .chord-label {
-  font-size: 6px;
+  font-size: 12px;
   font-weight: normal;
 }

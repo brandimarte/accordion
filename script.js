@@ -57,10 +57,10 @@ function getChordNotes(rootNote, chordType) {
       seventh = indexToNote[(rootIndex + 10) % 12];
       notes.push(indexToNote[rootIndex], third, seventh);
       break;
-    case "diminished": // Diminished triad (Root, m3, d5)
+    case "diminished": // As per user: Root, m3, d7
       third = indexToNote[(rootIndex + 3) % 12];
-      fifth = indexToNote[(rootIndex + 6) % 12];
-      notes.push(indexToNote[rootIndex], third, fifth);
+      seventh = indexToNote[(rootIndex + 9) % 12]; // Diminished 7th
+      notes.push(indexToNote[rootIndex], third, seventh);
       break;
     default:
       return [];
@@ -71,10 +71,10 @@ function getChordNotes(rootNote, chordType) {
 
 // --- Draw SVG grid ---
 const svg = document.getElementById("accordion-svg");
-const radius = 12;
-const spacingX = 30;
-const spacingY = 25;
-const offsetX = 15; // Stagger amount
+const radius = 24; // Doubled from 12
+const spacingX = 60; // Doubled from 30
+const spacingY = 50; // Doubled from 25
+const offsetX = 30; // Doubled from 15
 
 // Calculate the required width based on the maximum x-coordinate of any button
 const maxColIndex = bassNotes.length - 1;
@@ -123,7 +123,7 @@ rowTypes.forEach((row, rowIndex) => {
     } else {
       // Create vertical labels for chord buttons
       const chordNotes = getChordNotes(note, row.type);
-      const noteSpacing = 5; // Vertical spacing in pixels
+      const noteSpacing = 10; // Doubled from 5
 
       chordNotes.forEach((note, index) => {
         const noteLabel = document.createElementNS("http://www.w3.org/2000/svg", "text");
