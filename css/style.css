@@ -1,0 +1,121 @@
+body {
+  font-family: system-ui, sans-serif;
+  text-align: center;
+  margin: 0;
+  background: #fafafa;
+  color: #222;
+}
+
+header {
+  background: #333;
+  color: white;
+  padding: 0.75em;
+}
+
+#controls {
+  margin: 1.5em;
+}
+
+#diagram {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2em;
+  overflow-x: auto; /* Allow horizontal scrolling on small screens */
+}
+
+svg {
+  background: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.button {
+  fill: #e0e0e0;
+  stroke: #888;
+  stroke-width: 1px;
+  cursor: pointer;
+  transition: fill 0.2s;
+}
+
+.button:hover {
+  fill: #c5c5c5;
+}
+
+.button.active {
+  fill: #e74c3c;
+  stroke: #c0392b;
+}
+
+/* Style for the indented counter-bass buttons */
+.button[data-row-type="counterbass"] {
+  fill: #d5d5d5;
+}
+.button[data-row-type="counterbass"].active {
+  fill: #e74c3c;
+}
+
+/* Label text inside each button */
+.label {
+  font-size: 18px;
+  font-weight: bold;
+  text-anchor: middle;
+  dominant-baseline: central;
+  fill: #111;
+  user-select: none;
+  pointer-events: none;
+}
+
+label, select {
+  margin: 0.3em;
+  font-size: 1em;
+}
+
+footer {
+  font-size: 0.8em;
+  margin-top: 2em;
+  margin-bottom: 1em;
+  color: #555;
+}
+
+a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Style for the alternative chord buttons */
+.button.alternative {
+  fill: #89CFF0; /* Baby Blue */
+  stroke: #71a2b3;
+}
+
+/* Style for the chord note labels */
+.chord-label {
+  font-size: 12px;
+  font-weight: normal;
+}
+
+/* Style for buttons with concave depression */
+.button[data-row-type="bass"][data-note="Ab"],
+.button[data-row-type="bass"][data-note="C"],
+.button[data-row-type="bass"][data-note="E"] {
+  stroke-width: 3px; /* Thicker stroke */
+  stroke: #555; /* Slightly darker stroke for emphasis */
+}
+
+/* Style for buttons with concave depression (some accordions) */
+.button[data-row-type="bass"][data-note="Fb"],
+.button[data-row-type="bass"][data-note="G#"] {
+  stroke-width: 2px; /* Thicker stroke */
+  stroke: #555; /* Slightly darker stroke for emphasis */
+}
+
+.location-label {
+  font-size: 14px;
+  font-style: italic;
+  text-anchor: middle;
+  fill: #666;
+}
