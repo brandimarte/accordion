@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Visual indicators for concave bass buttons (Ab, C, E, Fb, G#).
 -   "Top" and "Bottom" labels for diagram orientation.
 -   Comprehensive `README.md` file.
--   `LICENSE` file (MIT License).
+-   `LICENSE` file (GNU GPLv3 License).
 
 ### Changed
 
