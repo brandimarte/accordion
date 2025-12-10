@@ -1,6 +1,7 @@
 import { bassNotes, rowTypes, noteToIndex, flatNoteMap, sharpNoteMap } from './config.js';
 import { getChordNotes } from './note-logic.js';
 import { DRAWING_CONFIG } from './drawing-config.js';
+import { playNote, playChord } from './sound.js';
 
 const svg = document.getElementById("accordion-svg");
 
@@ -71,6 +72,24 @@ export function drawAccordion() {
           group.appendChild(noteLabel);
         });
       }
+      group.addEventListener('click', () => {
+        if (row.type === 'bass' || row.type === 'counterbass') {
+          const bassNoteIndex = noteToIndex[note];
+          if (bassNoteIndex !== undefined) {
+            let noteToPlay = note;
+            if (row.type === 'counterbass') {
+              const counterBassIndex = (bassNoteIndex + 4) % 12;
+              const isFlatKey = note.includes('b') || note === 'F';
+              const primaryMap = isFlatKey ? flatNoteMap : sharpNoteMap;
+              noteToPlay = primaryMap[counterBassIndex];
+            }
+            playNote(noteToPlay, 3);
+          }
+        } else {
+          const chordNotes = getChordNotes(note, row.type);
+          playChord(chordNotes, 4);
+        }
+      });
       
       buttons.push(circle);
     });

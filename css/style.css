@@ -119,3 +119,24 @@ a:hover {
   text-anchor: middle;
   fill: #666;
 }
+
+#audio-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+#audio-enable {
+  font-size: 1.5em;
+  padding: 1em 2em;
+  cursor: pointer;
+  border-radius: 8px;
+  border: none;
+}
