@@ -5,8 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Accordion Chord Visualizer</title>
   <link rel="stylesheet" href="css/style.css" />
+  <script src="https://unpkg.com/tone@14.7.77/build/Tone.js"></script>
 </head>
 <body>
+  <div id="audio-overlay">
+    <button id="audio-enable">Click to enable audio</button>
+  </div>
   <header>
     <h1>Accordion Chord Visualizer (120-bass Stradella)</h1>
   </header>
@@ -19,7 +23,7 @@
     <select id="chord">
       <option value="major">Major</option>
       <option value="minor">Minor</option>
-      <option value="7">7</option>
+      <option value="seventh">7</option>
       <option value="diminished">7-</option>
       <option value="maj7">7+</option>
       <option value="m7">m7</option>
@@ -29,6 +33,7 @@
       <option value="7b5">m7b5</option>
       <option value="7(9)">7(9)</option>
     </select>
+    <button id="play-chord">Play Chord</button>
   </section>
 
   <section id="diagram">

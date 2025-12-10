@@ -1,6 +1,9 @@
 import { indexToNote, bassNotes, noteToIndex, indexToAllNotes } from './config.js';
 import { drawAccordion, buttons } from './drawing.js';
 import { highlightSingleChord } from './chords.js';
+import { initAudio } from './sound.js';
+import { getChordNotes } from './note-logic.js';
+import { playChordWithBass } from './sound.js';
 
 // --- Populate dropdowns ---
 const toneSelect = document.getElementById("tone");
@@ -40,9 +43,25 @@ function highlightChord() {
 }
 
 // --- Initial setup ---
+const audioOverlay = document.getElementById('audio-overlay');
+const audioButton = document.getElementById('audio-enable');
+
+audioButton.addEventListener('click', async () => {
+  await initAudio();
+  audioOverlay.style.display = 'none';
+}, { once: true });
+
 drawAccordion();
 toneSelect.addEventListener("change", highlightChord);
 document.getElementById("chord").addEventListener("change", highlightChord);
+
+const playChordButton = document.getElementById('play-chord');
+playChordButton.addEventListener('click', () => {
+  const selectedRoot = toneSelect.value;
+  const chordType = document.getElementById("chord").value;
+  const notesToPlay = getChordNotes(selectedRoot, chordType);
+  playChordWithBass(notesToPlay);
+});
 
 // Set default selection and highlight
 toneSelect.value = "C";

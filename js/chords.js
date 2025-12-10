@@ -19,7 +19,7 @@ const chordHighlighters = {
     activate(rootNote, "bass", className);
     activate(rootNote, "minor", className);
   },
-  "7": (rootNote, className) => {
+  "seventh": (rootNote, className) => {
     activate(rootNote, "bass", className);
     activate(rootNote, "seventh", className);
   },
