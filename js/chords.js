@@ -73,6 +73,7 @@ const chordHighlighters = {
     const sixthIndex = (rootNoteIndex + 9) % 12;
     const sixthNote = primaryMap[sixthIndex];
     activate(rootNote, "bass", className);
+    activate(rootNote, "major", className); // Added this line
     activate(sixthNote, "minor", className);
   },
   "m6": (rootNote, className) => {
@@ -105,6 +106,36 @@ const chordHighlighters = {
       if (expectedFifthChromaticIndex === correctFifthChromaticIndex) {
         activate(rootNote, "bass", className);
         activate(rootNote, "seventh", className);
+        activate(expectedFifthNote, "minor", className);
+      }
+    }
+  },
+  "7(9)_var": (rootNote, className, { rootNoteIndex }) => {
+    const rootNoteBassIndex = bassNotes.indexOf(rootNote);
+    const expectedFifthNote = bassNotes[rootNoteBassIndex + 1];
+
+    if (expectedFifthNote) {
+      const expectedFifthChromaticIndex = noteToIndex[expectedFifthNote];
+      const correctFifthChromaticIndex = (rootNoteIndex + 7) % 12;
+
+      if (expectedFifthChromaticIndex === correctFifthChromaticIndex) {
+        activate(rootNote, "bass", className);
+        activate(rootNote, "major", className);
+        activate(expectedFifthNote, "minor", className);
+      }
+    }
+  },
+  "m9": (rootNote, className, { rootNoteIndex }) => {
+    const rootNoteBassIndex = bassNotes.indexOf(rootNote);
+    const expectedFifthNote = bassNotes[rootNoteBassIndex + 1];
+
+    if (expectedFifthNote) {
+      const expectedFifthChromaticIndex = noteToIndex[expectedFifthNote];
+      const correctFifthChromaticIndex = (rootNoteIndex + 7) % 12;
+
+      if (expectedFifthChromaticIndex === correctFifthChromaticIndex) {
+        activate(rootNote, "bass", className);
+        activate(rootNote, "minor", className);
         activate(expectedFifthNote, "minor", className);
       }
     }
