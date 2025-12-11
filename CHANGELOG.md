@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2025-12-11
+
+### Added
+- m9 chord visualization and playback.
+- Bass note selector to visualize and play slash chords.
+- Logic to find and highlight the physically closest bass or counter-bass button for the selected bass note.
+
+### Changed
+- Improved the synthesizer sound to be more accordion-like.
+- Enabled the display of alternative (enharmonic) chord fingerings for slash chords.
+- Increased the volume of the bass note in audio playback for better balance.
+- Updated `README.md` to reflect the new bass selector feature.
+
 ## [1.1.0] - 2025-12-08
 
 ### Added
