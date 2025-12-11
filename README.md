@@ -7,6 +7,7 @@ A web-based tool to visualize chord fingerings on a 120-bass Stradella accordion
 -   **Interactive Diagram:** A complete 120-bass Stradella layout.
 -   **Audio Playback:** Click any button on the diagram to hear its corresponding note or chord.
 -   **Multiple Chord Types:** Visualize major, minor, dominant 7th, diminished, major 7th, minor 7th, and other complex chords.
+-   **Bass Note Selector:** Choose a specific bass note for any chord (slash chords), and the visualizer will find the closest physical button for that bass note.
 -   **"Play Chord" Button:** Play the currently selected chord with a proper bass note in a lower octave.
 -   **Enharmonic Equivalents:** Shows alternative fingerings for chords with enharmonically equivalent roots (e.g., A# and Bb).
 -   **Special Button Indicators:**
@@ -18,7 +19,7 @@ A web-based tool to visualize chord fingerings on a 120-bass Stradella accordion
 
 1.  Open the `index.html` file in your web browser.
 2.  A "Click to enable audio" button will appear. Click it to initialize the sound.
-3.  Use the **Tone** and **Chord type** dropdowns to select a chord. The diagram will automatically highlight the required buttons.
+3.  Use the **Tone**, **Chord type**, and **Bass note** dropdowns to select a chord. The diagram will automatically highlight the required buttons.
 4.  Click the **Play Chord** button to hear the selected chord.
 5.  Click any individual button on the SVG diagram to hear its specific note or chord.
 
