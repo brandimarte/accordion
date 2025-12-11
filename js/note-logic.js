@@ -70,8 +70,16 @@ export function getChordNotes(rootNote, chordType) {
       seventh = primaryMap[(rootIndex + 11) % 12]; // Major seventh
       notes.push(third, fifth, seventh);
       break;
+    case "7(9)_var":
     case "7(9)": // R, M3, P5, m7, M9
       third = primaryMap[(rootIndex + 4) % 12]; // Major third
+      fifth = primaryMap[(rootIndex + 7) % 12]; // Perfect fifth
+      seventh = flatNoteMap[(rootIndex + 10) % 12]; // Minor seventh
+      ninth = primaryMap[(rootIndex + 2) % 12]; // Major ninth
+      notes.push(third, fifth, seventh, ninth);
+      break;
+    case "m9": // R, m3, P5, m7, M9
+      third = flatNoteMap[(rootIndex + 3) % 12]; // Minor third
       fifth = primaryMap[(rootIndex + 7) % 12]; // Perfect fifth
       seventh = flatNoteMap[(rootIndex + 10) % 12]; // Minor seventh
       ninth = primaryMap[(rootIndex + 2) % 12]; // Major ninth

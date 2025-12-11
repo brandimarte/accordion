@@ -4,13 +4,15 @@ export async function initAudio() {
   await Tone.start();
   synth = new Tone.PolySynth(Tone.Synth, {
     oscillator: {
-      type: "square"
+      type: "fatsawtooth",
+      count: 3,
+      spread: 20
     },
     envelope: {
-      attack: 0.005,
+      attack: 0.01,
       decay: 0.1,
-      sustain: 0.3,
-      release: 1
+      sustain: 0.5,
+      release: 0.4
     }
   }).toDestination();
   console.log("Audio ready");
@@ -27,12 +29,15 @@ export function playChord(notes, octave = 4) {
   synth.triggerAttackRelease(chordNotes, "8n");
 }
 
-export function playChordWithBass(notes, chordOctave = 4, bassOctave = 3) {
-  if (!synth || !notes || notes.length === 0) return;
+export function playChordWithBass(bassNote, chordNotes, chordOctave = 4, bassOctave = 3) {
+  if (!synth || !bassNote || !chordNotes) return;
 
-  const rootNote = `${notes[0]}${bassOctave}`;
-  const otherNotes = notes.slice(1).map(n => `${n}${chordOctave}`);
-  const allNotes = [rootNote, ...otherNotes];
+  const bass = `${bassNote}${bassOctave}`;
+  const chord = chordNotes.map(n => `${n}${chordOctave}`);
 
-  synth.triggerAttackRelease(allNotes, "8n");
+  // Play bass note with higher velocity
+  synth.triggerAttackRelease(bass, "8n", Tone.now(), 1.2);
+
+  // Play chord notes with slightly lower velocity
+  synth.triggerAttackRelease(chord, "8n", Tone.now(), 0.9);
 }
