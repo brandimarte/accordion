@@ -9,7 +9,7 @@ export function getChordNotes(rootNote, chordType) {
   const primaryMap = isFlatKey ? flatNoteMap : sharpNoteMap;
 
   const notes = [];
-  let third, fifth, seventh, ninth, sixth;
+  let third, fifth, seventh, ninth, sixth, fourth;
 
   // The root note spelling should be preserved from the bassNotes array
   notes.push(rootNote);
@@ -84,6 +84,33 @@ export function getChordNotes(rootNote, chordType) {
       seventh = flatNoteMap[(rootIndex + 10) % 12]; // Minor seventh
       ninth = primaryMap[(rootIndex + 2) % 12]; // Major ninth
       notes.push(third, fifth, seventh, ninth);
+      break;
+    case "7b6": // R, M3, P5, m6, m7
+      third = primaryMap[(rootIndex + 4) % 12];
+      fifth = primaryMap[(rootIndex + 7) % 12];
+      sixth = flatNoteMap[(rootIndex + 8) % 12]; // Minor sixth
+      seventh = flatNoteMap[(rootIndex + 10) % 12]; // Minor seventh
+      notes.push(third, fifth, sixth, seventh);
+      break;
+    case "9sus4": // R, P4, P5, m7, M9
+      fourth = primaryMap[(rootIndex + 5) % 12]; // Perfect fourth
+      fifth = primaryMap[(rootIndex + 7) % 12];
+      seventh = flatNoteMap[(rootIndex + 10) % 12];
+      ninth = primaryMap[(rootIndex + 2) % 12];
+      notes.push(fourth, fifth, seventh, ninth);
+      break;
+    case "maj9": // R, M3, P5, M7, M9
+      third = primaryMap[(rootIndex + 4) % 12];
+      fifth = primaryMap[(rootIndex + 7) % 12];
+      seventh = primaryMap[(rootIndex + 11) % 12]; // Major seventh
+      ninth = primaryMap[(rootIndex + 2) % 12];
+      notes.push(third, fifth, seventh, ninth);
+      break;
+    case "aug": // R, M3, A5, M7
+      third = primaryMap[(rootIndex + 4) % 12];
+      fifth = sharpNoteMap[(rootIndex + 8) % 12]; // Augmented fifth is a sharp
+      seventh = primaryMap[(rootIndex + 11) % 12];
+      notes.push(third, fifth, seventh);
       break;
     default:
       return [];
