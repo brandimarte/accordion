@@ -1,6 +1,6 @@
 import { noteToIndex, flatNoteMap, sharpNoteMap, bassNotes, indexToAllNotes } from './config.js';
 import { buttons } from './drawing.js';
-import { findClosestNoteToLeft } from './utils.js';
+import { findClosestNoteToLeft, findClosestNoteToRight } from './utils.js';
 
 // --- Playability Rules ---
 const unplayableRootsMap = {
@@ -9,9 +9,13 @@ const unplayableRootsMap = {
   "dim_triad": ["Cb", "Fb", "Bbb"],
   "m7": ["Cb", "Fb", "Bbb"],
   "7b5": ["Cb", "Fb", "Bbb"],
+  "7b6": ["Bbb"],
   "7(9)" : ["A#"],
   "7(9)_var" : ["A#"],
   "m9" : ["A#"],
+  "9sus4" : ["A#", "Fb", "Bbb"],
+  "maj9": ["C#", "G#", "D#", "A#"],
+  "aug": ["C#", "G#", "D#", "A#"],
 };
 
 function isPlayable(rootNote, chordType) {
@@ -144,6 +148,14 @@ const chordHighlighters = {
       activate(bestFitMinorThird, "minor", className);
     }
   },
+  "7b6": (rootNote, className, { rootNoteIndex }) => {
+    const fourthIndex = (rootNoteIndex + 5) % 12;
+    const bestFitFourth = findClosestNoteToLeft(rootNote, rootNoteIndex, fourthIndex);
+    if (bestFitFourth) {
+      activate(rootNote, "seventh", className);
+      activate(bestFitFourth, "minor", className);
+    }
+  },
   "7(9)": (rootNote, className, { rootNoteIndex }) => {
     const rootNoteBassIndex = bassNotes.indexOf(rootNote);
     const expectedFifthNote = bassNotes[rootNoteBassIndex + 1];
@@ -178,6 +190,36 @@ const chordHighlighters = {
         activate(rootNote, "minor", className);
         activate(expectedFifthNote, "minor", className);
       }
+    }
+  },
+  "9sus4": (rootNote, className, { rootNoteIndex, primaryMap }) => {
+    const fifthNote = primaryMap[(rootNoteIndex + 7) % 12];
+
+    const minorSeventhIndex = (rootNoteIndex + 10) % 12;
+    const bestFitMinorSeventh = findClosestNoteToLeft(rootNote, rootNoteIndex, minorSeventhIndex);
+
+    if (bestFitMinorSeventh) {
+      activate(fifthNote, "minor", className);
+      activate(bestFitMinorSeventh, "major", className);
+    }
+  },
+  "maj9": (rootNote, className, { rootNoteIndex }) => {
+    const majorThirdIndex = (rootNoteIndex + 4) % 12;
+    const bestFitMajorThird = findClosestNoteToRight(rootNote, rootNoteIndex, majorThirdIndex);
+
+    const fifthIndex = (rootNoteIndex + 7) % 12;
+    const bestFitFifth = findClosestNoteToRight(rootNote, rootNoteIndex, fifthIndex);
+
+    if (bestFitMajorThird && bestFitFifth) {
+      activate(bestFitMajorThird, "minor", className);
+      activate(bestFitFifth, "major", className);
+    }
+  },
+  "aug": (rootNote, className, { rootNoteIndex }) => {
+    const majorThirdIndex = (rootNoteIndex + 4) % 12;
+    const bestFitMajorThird = findClosestNoteToRight(rootNote, rootNoteIndex, majorThirdIndex);
+    if (bestFitMajorThird) {
+      activate(bestFitMajorThird, "major", className);
     }
   }
 };
