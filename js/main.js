@@ -62,9 +62,9 @@ function highlightChord() {
 const audioOverlay = document.getElementById('audio-overlay');
 const audioButton = document.getElementById('audio-enable');
 
-audioButton.addEventListener('click', async () => {
-  await initAudio();
+audioButton.addEventListener('click', () => {
   audioOverlay.style.display = 'none';
+  initAudio().catch(err => console.error('Audio init failed:', err));
 }, { once: true });
 
 drawAccordion();
