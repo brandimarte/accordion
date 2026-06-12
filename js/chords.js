@@ -12,7 +12,7 @@ const unplayableRootsMap = {
   "7b6": ["Bbb"],
   "7(9)" : ["A#"],
   "7(9)_var" : ["A#"],
-  "7(b9)": ["A#"],
+  "7(b9)": ["Bbb", "Fb"],
   "m9" : ["A#"],
   "9sus4" : ["A#", "Fb", "Bbb"],
   "maj9": ["C#", "G#", "D#", "A#"],
@@ -171,12 +171,13 @@ const chordHighlighters = {
   },
   "7(b9)": (rootNote, className, { rootNoteIndex }) => {
     const rootNoteBassIndex = bassNotes.indexOf(rootNote);
-    const expectedFifthNote = bassNotes[rootNoteBassIndex + 1];
-    if (expectedFifthNote) {
-      const expectedFifthChromaticIndex = noteToIndex[expectedFifthNote];
-      const correctFifthChromaticIndex = (rootNoteIndex + 7) % 12;
-      if (expectedFifthChromaticIndex === correctFifthChromaticIndex) {
-        activate(expectedFifthNote, "diminished", className);
+    const minorSeventhNote = bassNotes[rootNoteBassIndex - 2];
+    if (minorSeventhNote) {
+      const minorSeventhChromaticIndex = noteToIndex[minorSeventhNote];
+      const correctMinorSeventhChromaticIndex = (rootNoteIndex + 10) % 12;
+      if (minorSeventhChromaticIndex === correctMinorSeventhChromaticIndex) {
+        activate(rootNote, "major", className);
+        activate(minorSeventhNote, "diminished", className);
       }
     }
   },
