@@ -99,6 +99,12 @@ export function getChordNotes(rootNote, chordType) {
       seventh = flatNoteMap[(rootIndex + 10) % 12]; // Minor seventh
       notes.push(third, fifth, sixth, seventh);
       break;
+    case "7sus4": // R, P4, P5, m7
+      fourth = primaryMap[(rootIndex + 5) % 12];
+      fifth = primaryMap[(rootIndex + 7) % 12];
+      seventh = flatNoteMap[(rootIndex + 10) % 12];
+      notes.push(fourth, fifth, seventh);
+      break;
     case "9sus4": // R, P4, P5, m7, M9
       fourth = primaryMap[(rootIndex + 5) % 12]; // Perfect fourth
       fifth = primaryMap[(rootIndex + 7) % 12];

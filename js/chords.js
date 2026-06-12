@@ -14,6 +14,7 @@ const unplayableRootsMap = {
   "7(9)_var" : ["A#"],
   "7(b9)": ["Bbb", "Fb"],
   "m9" : ["A#"],
+  "7sus4": ["Bbb", "Fb", "A#"],
   "9sus4" : ["A#", "Fb", "Bbb"],
   "maj9": ["C#", "G#", "D#", "A#"],
   "aug": ["C#", "G#", "D#", "A#"],
@@ -204,6 +205,14 @@ const chordHighlighters = {
         activate(expectedFifthNote, "minor", className);
       }
     }
+  },
+  "7sus4": (rootNote, className, { rootNoteIndex, primaryMap }) => {
+    const fourthNote = primaryMap[(rootNoteIndex + 5) % 12];
+    const fifthNote = primaryMap[(rootNoteIndex + 7) % 12];
+    const minorSeventhNote = primaryMap[(rootNoteIndex + 10) % 12];
+    activateBassNote(fourthNote, rootNote, className);
+    activateBassNote(fifthNote, rootNote, className);
+    activateBassNote(minorSeventhNote, rootNote, className);
   },
   "9sus4": (rootNote, className, { rootNoteIndex, primaryMap }) => {
     const fifthNote = primaryMap[(rootNoteIndex + 7) % 12];
