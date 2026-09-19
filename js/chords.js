@@ -9,6 +9,7 @@ const unplayableRootsMap = {
   "dim_triad": ["Cb", "Fb", "Bbb"],
   "m7": ["Cb", "Fb", "Bbb"],
   "7b5": ["Cb", "Fb", "Bbb"],
+  "7b5_var": ["Cb", "Fb", "Bbb"],
   "7b6": ["Bbb"],
   "7(9)" : ["A#"],
   "7(9)_var" : ["A#"],
@@ -96,6 +97,88 @@ function activateBassNote(targetNote, rootNote, className = "active") {
   }
 }
 
+// Activates the counter-bass button whose computed note matches rootNote (for m7b5 var)
+function activateRootCounterBass(rootNote, className = "active") {
+  const rootNoteIndex = noteToIndex[rootNote];
+  if (rootNoteIndex === undefined) return;
+
+  const rootNoteBassButton = buttons.find(b => b.dataset.note === rootNote && b.dataset.rowType === "bass");
+  if (!rootNoteBassButton) return;
+  const rootNoteCoords = getButtonCoords(rootNoteBassButton);
+
+  const candidateButtons = buttons.filter(b => {
+    if (b.dataset.rowType !== "counterbass") return false;
+    const fundamentalNote = b.dataset.note;
+    const fundamentalNoteIndex = noteToIndex[fundamentalNote];
+    if (fundamentalNoteIndex === undefined) return false;
+    const counterBassIndex = (fundamentalNoteIndex + 4) % 12;
+    const isFlatKey = fundamentalNote.includes('b') || fundamentalNote === 'F';
+    const primaryMap = isFlatKey ? flatNoteMap : sharpNoteMap;
+    const buttonNote = primaryMap[counterBassIndex];
+    return noteToIndex[buttonNote] === rootNoteIndex;
+  });
+
+  if (candidateButtons.length === 0) return false;
+
+  let closestButton = null;
+  let minDistance = Infinity;
+  for (const button of candidateButtons) {
+    const buttonCoords = getButtonCoords(button);
+    const distance = Math.sqrt(Math.pow(rootNoteCoords.x - buttonCoords.x, 2) + Math.pow(rootNoteCoords.y - buttonCoords.y, 2));
+    if (distance < minDistance) {
+      minDistance = distance;
+      closestButton = button;
+    }
+  }
+
+  if (closestButton) {
+    if (closestButton.classList.contains("active")) {
+      return true; // same physical position as primary; caller should skip chord highlighting
+    }
+    closestButton.classList.add(className);
+  }
+  return false;
+}
+
+// Activates all non-primary counter-bass buttons for rootNote as "alternative"
+function activateCounterBassAlternatives(rootNote) {
+  const rootNoteIndex = noteToIndex[rootNote];
+  if (rootNoteIndex === undefined) return;
+
+  const rootNoteBassButton = buttons.find(b => b.dataset.note === rootNote && b.dataset.rowType === "bass");
+  if (!rootNoteBassButton) return;
+  const rootNoteCoords = getButtonCoords(rootNoteBassButton);
+
+  const candidateButtons = buttons.filter(b => {
+    if (b.dataset.rowType !== "counterbass") return false;
+    const fundamentalNote = b.dataset.note;
+    const fundamentalNoteIndex = noteToIndex[fundamentalNote];
+    if (fundamentalNoteIndex === undefined) return false;
+    const counterBassIndex = (fundamentalNoteIndex + 4) % 12;
+    const isFlatKey = fundamentalNote.includes('b') || fundamentalNote === 'F';
+    const primaryMap = isFlatKey ? flatNoteMap : sharpNoteMap;
+    const buttonNote = primaryMap[counterBassIndex];
+    return noteToIndex[buttonNote] === rootNoteIndex;
+  });
+
+  let primary = null;
+  let minDistance = Infinity;
+  for (const button of candidateButtons) {
+    const buttonCoords = getButtonCoords(button);
+    const distance = Math.sqrt(Math.pow(rootNoteCoords.x - buttonCoords.x, 2) + Math.pow(rootNoteCoords.y - buttonCoords.y, 2));
+    if (distance < minDistance) {
+      minDistance = distance;
+      primary = button;
+    }
+  }
+
+  for (const button of candidateButtons) {
+    if (button !== primary && !button.classList.contains("active")) {
+      button.classList.add("alternative");
+    }
+  }
+}
+
 function activate(targetNote, rowType, className = "active") {
   buttons
     .filter(b => b.dataset.note === targetNote && b.dataset.rowType === rowType)
@@ -148,6 +231,20 @@ const chordHighlighters = {
     const bestFitMinorThird = findClosestNoteToLeft(rootNote, rootNoteIndex, (rootNoteIndex + 3) % 12);
     if (bestFitMinorThird) {
       activate(bestFitMinorThird, "minor", className);
+    }
+  },
+  "7b5_var": (rootNote, className, { rootNoteIndex }) => {
+    const minorThirdIndex = (rootNoteIndex + 3) % 12;
+    const bestFitLeft = findClosestNoteToLeft(rootNote, rootNoteIndex, minorThirdIndex);
+    const bestFitRight = findClosestNoteToRight(rootNote, rootNoteIndex, minorThirdIndex);
+    if (bestFitLeft) {
+      activate(bestFitLeft, "minor", className);
+    }
+    if (bestFitRight && bestFitRight !== bestFitLeft) {
+      buttons
+        .filter(b => b.dataset.note === bestFitRight && b.dataset.rowType === "minor" && !b.classList.contains("active"))
+        .forEach(b => b.classList.add("alternative"));
+      activateCounterBassAlternatives(rootNote);
     }
   },
   "7b6": (rootNote, className, { rootNoteIndex }) => {
@@ -246,6 +343,9 @@ const chordHighlighters = {
   }
 };
 
+// Chord types that use the counter-bass row (1st line) for the root instead of the bass row
+const counterBassChordTypes = new Set(["7b5_var"]);
+
 // --- Main Highlighting Function ---
 
 export function highlightSingleChord(rootNote, chordType, className, bassNoteToHighlight) {
@@ -258,6 +358,11 @@ export function highlightSingleChord(rootNote, chordType, className, bassNoteToH
   if (bassNoteToHighlight !== rootNote) {
     // Slash chord behavior: find the best bass/counter-bass button.
     activateBassNote(bassNoteToHighlight, rootNote, className);
+  } else if (counterBassChordTypes.has(chordType)) {
+    // Counter-bass variation: use the counter-bass row (1st line) for the root.
+    // If the counter-bass position is already "active" (same physical position as the
+    // primary root), skip chord highlighting entirely to avoid spurious alternatives.
+    if (activateRootCounterBass(rootNote, className)) return;
   } else {
     // Default behavior: bass is the root. Use simple activation on the 'bass' row.
     activate(rootNote, "bass", className);

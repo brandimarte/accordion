@@ -58,6 +58,7 @@ export function getChordNotes(rootNote, chordType) {
       seventh = flatNoteMap[(rootIndex + 10) % 12]; // Minor seventh
       notes.push(third, fifth, seventh);
       break;
+    case "7b5_var": // R, m3, d5, m7 (bass on counter-bass row)
     case "7b5": // R, m3, d5, m7
       third = flatNoteMap[(rootIndex + 3) % 12]; // Minor third
       fifth = flatNoteMap[(rootIndex + 6) % 12]; // Diminished fifth
